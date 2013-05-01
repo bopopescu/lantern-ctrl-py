@@ -3,13 +3,13 @@ import logging
 from lxml import etree
 
 import webapp2
-from google.appengine.api import app_identity, xmpp
+from google.appengine.api import xmpp
 
+import const
 import data
 import util
 
 
-ctrlid = app_identity.get_application_id()
 prefixes = {'cli': "{jabber:client}",
             'prop': "{http://www.jivesoftware.com/xmlns/xmpp/properties}"}
 query_str = ("/{cli}presence/{prop}properties/{prop}property[{prop}name='%s']"
@@ -35,7 +35,7 @@ class AvailableHandler(webapp2.RequestHandler):
         sender_email = util.userid_from_jid(sender_jid)
         if not data.is_invited(sender_email):
             logging.info("Not invited!")
-            send_response(sender_jid, {'invd': False})
+            send_response(sender_jid, {const.INVITED: False})
             return
         stanza = self.request.get('stanza')
         et = etree.fromstring(stanza)
@@ -49,5 +49,5 @@ class UnavailableHandler(webapp2.RequestHandler):
 def send_response(jid, body):
     xmpp.send_message([jid],
                       json.dumps(body),
-                      ('%s@appspot.com' % ctrlid),
+                      const.CTRL_JID,
                       xmpp.MESSAGE_TYPE_HEADLINE)
