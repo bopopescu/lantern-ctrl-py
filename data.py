@@ -29,5 +29,9 @@ def create_root_user():
                 sponsor=root_email).put()
     logging.info("Created new root user.")
 
+@ndb.transactional
+def update_last_accessed(email):
+    ndb.Key('LanternUser', email).get().put()
+
 def is_invited(email):
      return ndb.Key('LanternUser', email).get() is not None

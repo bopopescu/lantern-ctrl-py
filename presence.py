@@ -33,10 +33,13 @@ class AvailableHandler(webapp2.RequestHandler):
         sender_jid = self.request.get('from')
         logging.info("Got request from jid %r to %r", sender_jid, self.request.get('to'))
         sender_email = util.userid_from_jid(sender_jid)
-        if not data.is_invited(sender_email):
+        response = {}
+        is_invited = response[const.INVITED] = data.is_invited(sender_email)
+        if not is_invited:
             logging.info("Not invited!")
-            send_response(sender_jid, {const.INVITED: False})
+            send_response(sender_jid, response)
             return
+        data.update_last_accessed(sender_email)
         stanza = self.request.get('stanza')
         et = etree.fromstring(stanza)
         logging.info("Got event with mode: %r", get_property(et, 'mode'))
