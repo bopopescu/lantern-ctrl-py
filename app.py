@@ -10,6 +10,7 @@ from boto.sqs.message import RawMessage
 
 import mandrill
 
+import data
 import presence
 import secrets
 
@@ -65,10 +66,18 @@ def mergevarize(d):
     return [{'name': k, 'content': v}
             for k, v in d.iteritems()]
 
+class CreateRootUserHandler(webapp2.RequestHandler):
+    def get(self):
+        data.create_root_user()
+        self.response.write("Done.")
+
+
 app = webapp2.WSGIApplication([('/_ah/xmpp/presence/available/',
                                 presence.AvailableHandler),
                                ('/_ah/xmpp/presence/unavailable/',
                                 presence.UnavailableHandler),
                                ('/cron', Cron),
-                               ('/mandrill', Mandrill)],
+                               ('/mandrill', Mandrill),
+                               ('/admin/createrootuser',
+                                CreateRootUserHandler)],
                               debug=True)
