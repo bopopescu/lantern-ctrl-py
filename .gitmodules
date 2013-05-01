@@ -1,0 +1,3 @@
+[submodule "too-many-secrets"]
+	path = too-many-secrets
+	url = git@github.com:getlantern/too-many-secrets
