@@ -34,16 +34,26 @@ class AvailableHandler(webapp2.RequestHandler):
         logging.info("Got request from jid %r to %r", sender_jid, self.request.get('to'))
         sender_email = util.userid_from_jid(sender_jid)
         response = {}
+        def respond():
+            send_response(sender_jid, response)
         is_invited = response[const.INVITED] = data.is_invited(sender_email)
         if not is_invited:
             logging.info("Not invited!")
-            send_response(sender_jid, response)
+            respond()
             return
         data.update_last_accessed(sender_email)
         stanza = self.request.get('stanza')
         et = etree.fromstring(stanza)
+        if self.is_invite(et):
+            logging.info("This is an invite.")
+        else:
+            logging.info("No invite in presence.")
         logging.info("Got event with mode: %r", get_property(et, 'mode'))
         logging.info("Full stanza: %r", stanza)
+        respond()
+
+    def is_invite(self, et):
+        return bool(get_property(et, const.INVITED_EMAIL))
 
 class UnavailableHandler(webapp2.RequestHandler):
     def post(self):
