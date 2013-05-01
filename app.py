@@ -10,16 +10,9 @@ from boto.sqs.message import RawMessage
 
 import mandrill
 
+import presence
 import secrets
 
-
-class AvailableHandler(webapp2.RequestHandler):
-    def post(self):
-        logging.info("Got available event: " + repr(self.request))
-
-class UnavailableHandler(webapp2.RequestHandler):
-    def post(self):
-        logging.info("Got unavailable event: " + repr(self.request))
 
 class Cron(webapp2.RequestHandler):
     logging.getLogger('boto').setLevel(logging.INFO)
@@ -73,9 +66,9 @@ def mergevarize(d):
             for k, v in d.iteritems()]
 
 app = webapp2.WSGIApplication([('/_ah/xmpp/presence/available/',
-                                AvailableHandler),
+                                presence.AvailableHandler),
                                ('/_ah/xmpp/presence/unavailable/',
-                                UnavailableHandler),
+                                presence.UnavailableHandler),
                                ('/cron', Cron),
                                ('/mandrill', Mandrill)],
                               debug=True)
