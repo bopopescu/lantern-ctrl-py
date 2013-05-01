@@ -5,9 +5,10 @@ import webapp2
 from util import memoized
 
 
-clns = "{jabber:client}"
-propns = "{http://www.jivesoftware.com/xmlns/xmpp/properties}"
-query_str = "/%(clns)spresence/%(propns)sproperties/%(propns)sproperty[%(propns)sname='%%s']/%(propns)svalue/text()" % locals()
+prefixes = {'cli': "{jabber:client}",
+            'prop': "{http://www.jivesoftware.com/xmlns/xmpp/properties}"}
+query_str = ("/{cli}presence/{prop}properties/{prop}property[{prop}name='%s']"
+             "/{prop}value/text()").format(**prefixes)
 
 
 @memoized
