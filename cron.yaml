@@ -1,0 +1,4 @@
+cron:
+    - description: prova do cron
+      url: /cron
+      schedule: every 1 minutes
