@@ -22,6 +22,7 @@ class UnavailableHandler(webapp2.RequestHandler):
         logging.info("Got unavailable event: " + repr(self.request))
 
 class Cron(webapp2.RequestHandler):
+    logging.getLogger('boto').setLevel(logging.INFO)
     def get(self):
         sqs = boto.connect_sqs(secrets.awsAccessKeyId,
                                secrets.awsSecretKey)

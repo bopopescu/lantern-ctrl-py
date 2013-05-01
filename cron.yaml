@@ -1,4 +1,4 @@
 cron:
-    - description: prova do cron
+    - description: cron and sqs test
       url: /cron
-      schedule: every 1 minutes
+      schedule: every 10 minutes
